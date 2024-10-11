@@ -1,0 +1,42 @@
+body {
+    display: flex;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+  #calculatorContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #calculator {
+    width: 700px;
+    height: 500px;
+    margin-right: 20px; /* Adds space between the calculator and the checkboxes */
+  }
+
+  #checkboxContainer {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .heading {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .checkboxGroup {
+    margin-bottom: 20px; /* Adds space between checkbox groups */
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  #regenerate-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
