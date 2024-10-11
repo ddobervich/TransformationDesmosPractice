@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <script src="https://www.desmos.com/api/v1.9/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+    <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+  </head>
+  <body>
+    <div id="calculatorContainer">
+      <div id="calculator"></div>
+      <button id="regenerate-btn">Make another one!</button>
+    </div>
+    <div class="checkboxGroup">
+      <div class="heading">What functions to practice?</div>
+      <label> <input type="checkbox" id="linear" /> Linear </label>
+      <label> <input type="checkbox" id="quad" /> Quadratic </label>
+      <label> <input type="checkbox" id="exponential" /> Exponential </label>
+      <label> <input type="checkbox" id="squareRoot" /> Square root </label>
+      <label> <input type="checkbox" id="cubic" /> Cubic </label>
+      <div class="heading">What transformations to use?</div>
+      <label>
+        <input type="checkbox" id="vScale" /> Include vertical scale
+      </label>
+      <label>
+        <input type="checkbox" id="vReflect" /> Vertical reflection
+      </label>
+      <label>
+        <input type="checkbox" id="hReflect" /> Horizontal reflection
+      </label>
+      <label>
+        <input type="checkbox" id="vTranslate" /> Vertical translation
+      </label>
+      <label>
+        <input type="checkbox" id="hTranslate" /> Horizontal translation
+      </label>
+
+      <!-- <div class="heading">Need a hint?</div>
+      <label>
+    <input type="checkbox" id='showPoints' /> Show integer coordinates
+  </label>
+-->
+    </div>
+
+    <script>
+      const element = document.getElementById("calculator");
+      const calculator = Desmos.GraphingCalculator(element);
+
+      let expressionId = "quadraticExpression"; // Keep track of the expression ID
+
+      // Generate random integers for a, c, and d
+      function getRandomInt(min, max) {
+        let randomInt;
+        do {
+          randomInt = Math.floor(Math.random() * (max - min + 1)) + min;
+        } while (randomInt == 0);
+        return randomInt;
+      }
+
+      // Function to generate and set a new expression
+      function generateNewExpression() {
+        const linear = document.getElementById("linear").checked;
+        const quadratic = document.getElementById("quad").checked;
+        const cubic = document.getElementById("cubic").checked;
+        const exponential = document.getElementById("exponential").checked;
+        const squareRoot = document.getElementById("squareRoot").checked;
+
+        const vScale = document.getElementById("vScale").checked;
+        const vReflect = document.getElementById("vReflect").checked;
+        const hReflect = document.getElementById("hReflect").checked;
+        const vTranslate = document.getElementById("vTranslate").checked;
+        const hTranslate = document.getElementById("hTranslate").checked;
+        //const showPoints = document.getElementById('showPoints').checked;
+
+        const maxVal = 5;
+        const maxScaleVal = 5;
+
+        const r1 = getRandomInt(1, maxScaleVal); // for vertical scaling
+        const r2 = getRandomInt(1, maxVal);
+        const r3 = getRandomInt(0, maxVal); //for translation, could be 0
+        const r4 = getRandomInt(0, maxVal);
+        const s1 = Math.random() < 0.5 ? -1 : 1;
+        const s2 = Math.random() < 0.5 ? -1 : 1;
+        const s3 = Math.random() < 0.5 ? -1 : 1;
+        const s4 = Math.random() < 0.5 ? -1 : 1;
+
+        let vs = vScale ? r1 : 1;
+        let vr = vReflect ? s1 : 1;
+        let hr = hReflect ? s2 : 1;
+        let vt = vTranslate ? s3 * r3 : 0;
+        let ht = hTranslate ? s4 * r4 : 0;
+
+        let expressions = [];
+        if (linear)
+          expressions.push(`y = ${s1}\\cdot${r1}/${r2}(x - ${ht}) + ${vt}`);
+        if (quadratic)
+          expressions.push(`y = ${vr}\\cdot${vs}(x + ${ht})^2 + ${vt}`);
+        if (cubic)
+          expressions.push(`y = ${vr}\\cdot${vs}(${hr}x+${ht})^3 + ${vt}`);
+        if (exponential)
+          expressions.push(
+            `y = ${vr}\\cdot${vs}\\cdot2^{${hr}x+${ht}} + ${vt}`
+          );
+        if (squareRoot)
+          expressions.push(`y = ${vr}\\cdot${vs}\\sqrt{${hr}x+${ht}} + ${vt}`);
+
+        const expression = getRandom(expressions);
+
+        console.log(expression);
+
+        // Update the expression in the calculator
+        calculator.setExpression({
+          id: expressionId, // Use the same ID to overwrite the old expression
+          latex: expression,
+          secret: "true",
+        });
+
+        /*   if (showPoints) {
+        const desmosPoints = generateDesmosExpressions(expression);
+        console.log(desmosPoints);
+        desmosPoints.forEach((point, index) => {
+          calculator.setExpression({
+           id: `point${index}`,
+           latex: point
+         });
+        });
+      }
+      */
+      }
+
+      function getRandom(arr) {
+        const randomIndex = Math.floor(Math.random() * arr.length);
+        return arr[randomIndex];
+      }
+
+      // Generate the initial expression
+      generateNewExpression();
+
+      // Add event listener to the button to regenerate the expression
+      document
+        .getElementById("regenerate-btn")
+        .addEventListener("click", generateNewExpression);
+    </script>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>
